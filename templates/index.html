@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speaker Identification System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script type="module" src="{{ url_for('static', filename='js/script.js') }}"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top ">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Speaker Identification System</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about-us">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#faq">FAQ</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <span id="welcomeMessage" class="text-light"></span>
+                    <button id="modalLogout" style="display: none;" class="btn-danger ml-2">Logout</button>
+                    <!-- Logout Modal -->
+                    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
+                        aria-labelledby="logoutModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="logoutModalLabel">Logout</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to logout?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button type="button" id="logout" class="btn btn-primary"">Logout</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <li class=" nav-item">
+                                        <a class="nav-link" href="#" id="loginLink" data-toggle="modal"
+                                            data-target="#loginModal">Login</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#" id="signupLink" data-toggle="modal"
+                                                data-target="#signupModal">Signup</a>
+                                        </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">LOGIN</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Add your login form elements here -->
+                    <form>
+                        <div class="form-group">
+
+                            <input type="email" class="form-control" id="loginEmail" placeholder="Enter email" required>
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                                else.</small>
+                        </div>
+                        <div class="form-group">
+
+                            <input type="password" class="form-control" id="loginPassword" placeholder="Password"
+                                required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary mt-3">Log in</button>
+                        </div>
+                    </form>
+                    <!-- Loader -->
+                    <div class="d-flex justify-content-center align-items-center loader-container">
+                        <div class="spinner-border loader" role="status" style="display: none;">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button class="btn btn-link" id="forgotPassword">Forgot Password?</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <p>New User? <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal"
+                            data-target="#signupModal">Sign up</button></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="signupModalLabel">SIGN UP</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Add your signup form elements here -->
+                    <form>
+                        <div class="form-group">
+
+                            <input type="text" class="form-control" id="signupFirstName" placeholder="First Name"
+                                required>
+                        </div>
+                        <div class="form-group">
+
+                            <input type="text" class="form-control" id="signupLastName" placeholder="Last Name"
+                                required>
+                        </div>
+                        <div class="form-group">
+
+                            <input type="email" class="form-control" id="signupEmail" placeholder="Enter email"
+                                required>
+                        </div>
+                        <div class="form-group">
+
+                            <input type="password" class="form-control" id="signupPassword" placeholder="Password"
+                                required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Sign Up</button>
+                        </div>
+                    </form>
+                    <!-- Loader -->
+                    <div class="d-flex justify-content-center align-items-center loader-container">
+                        <div class="spinner-border loader" role="status" style="display: none;">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <p>Already have an account? <button type="button" class="btn btn-primary" data-dismiss="modal"
+                            data-toggle="modal" data-target="#loginModal">Log in</button></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog"
+aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="forgotPasswordModalLabel">Forgot Password?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <!-- Forgot password form -->
+            <form id="forgotPasswordForm">
+                <div class="form-group">
+                    <label for="forgotPasswordEmail">Enter your email address:</label>
+                    <input type="email" class="form-control" id="forgotPasswordEmail" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Reset Password</button>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+    <!-- Your existing content -->
+    
+    <div class="container">
+        <br><br>
+        <h1 >Welcome to Speaker Identification System</h1>
+        <br>
+        <a href="{{ url_for('record_train') }}" class="btn btn-primary">Train Model by Recording Audio</a>
+        <a href="{{ url_for('record_test') }}" class="btn btn-success">Test Model by Recording Audio</a>
+    </div>
+
+    <div id="about-us">
+        <br>
+        <br>
+        <div class="container mt-2 text-dark">
+            <h1 class="mb-4">About Us</h1>
+
+            <p>
+                Welcome to our Speaker Identification System! At our core, we're driven by a profound fascination with
+                the
+                intricate nuances of voice technology and its limitless potential. Our dedicated team is committed to
+                pioneering advancements in speaker identification, working tirelessly to develop innovative solutions
+                that
+                redefine the landscape of voice recognition. With a steadfast focus on security, efficiency, and user
+                experience, we strive to empower individuals and organizations alike with state-of-the-art tools for
+                seamless and reliable authentication through the power of voice.
+            </p>
+            <br>
+            <br>
+            <h1 class="mt-2">Our Team</h1>
+
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-interval="10000" data-ride="carousel">
+                <div class="carousel-inner">
+                    <!-- Team member 1 -->
+                    <div class="carousel-item active">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-md-4 mb-4">
+                                <div class="card">
+                                    <img src="static\photolatest.jpg" alt="Team Member 1"
+                                        class="card-img-top team-member-img">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-center">DEBASISH CHATTERJEE</h5>
+                                        <p class="card-text text-center">Registration No = 20040445005</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team member 2 -->
+                    <div class="carousel-item">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-md-4 mb-4">
+                                <div class="card">
+                                    <img src="static\anjan.jpg" alt="Team Member 2"
+                                        class="card-img-top team-member-img">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-center">ANJAN KUMAR VISHWAKARMA</h5>
+                                        <p class="card-text text-center">Registration No = 20040440007</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team member 3 -->
+                    <div class="carousel-item">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-md-4 mb-4">
+                                <div class="card">
+                                    <img src="static\roshan.jpg" alt="Team Member 3"
+                                        class="card-img-top team-member-img">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-center">ROSHAN KUMAR SINGH</h5>
+                                        <p class="card-text text-center">Registration No = 20040445015</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team member 4 -->
+                    <div class="carousel-item">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-md-4 mb-4">
+                                <div class="card">
+                                    <img src="static\ranjit.jpg" alt="Team Member 4"
+                                        class="card-img-top team-member-img">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-center">RANJEET PANDIT</h5>
+                                        <p class="card-text text-center">Registration No = 20040440031</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team member 5 -->
+                    <div class="carousel-item">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-md-4 mb-4">
+                                <div class="card">
+                                    <img src="static\rajeev.jpg" alt="Team Member 5"
+                                        class="card-img-top team-member-img">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-center">RAJIV RANJAN SINGH</h5>
+                                        <p class="card-text text-center">Registration No = 20040445014</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <br>
+            <br>
+
+            <h1 class="mt-2">Our Vision</h1>
+
+            <p>
+                At Speaker Identification System, we envision a future where voice technology seamlessly integrates into
+                various industries, providing personalized and secure experiences. Our mission is to lead the way in
+                innovation, offering state-of-the-art solutions for speaker identification and voice recognition. We
+                strive to create a world where individuals can interact with technology using their voices confidently
+                and securely. Through our dedication to research and development, we aim to unlock the full potential
+                of voice technology, revolutionizing how we interact with devices and enhancing user experiences across
+                diverse sectors.
+            </p>
+            <br>
+            <br>
+        </div>
+    </div>
+    <div id="faq" class="container mt-2">
+        <h1 class="mb-4 text-dark">FAQ</h1>
+        <div class="accordion" id="faqAccordion">
+            <!-- FAQ item 1 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-toggle="collapse" data-target="#collapseOne"
+                        aria-expanded="true" aria-controls="collapseOne">
+                        How does the Speaker Identification System work?
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                    data-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Answer: The Speaker Identification System works by capturing and analyzing unique vocal
+                        characteristics of individuals, such as pitch, tone, and pronunciation. These characteristics
+                        are
+                        then compared with stored voice profiles to verify the identity of the speaker.
+                    </div>
+                </div>
+            </div>
+            <!-- FAQ item 2 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-toggle="collapse"
+                        data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Is the Speaker Identification System accurate?
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                    data-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Answer: Yes, the Speaker Identification System boasts high accuracy due to its advanced voice
+                        recognition technology. It undergoes rigorous testing to ensure reliable identification even in
+                        varied environmental conditions.
+                    </div>
+                </div>
+            </div>
+            <!-- Add more FAQ items as needed -->
+            <!-- FAQ item 3 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-toggle="collapse"
+                        data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Can the system be fooled by recordings or impersonations?
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                    data-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Answer: The system incorporates anti-spoofing measures to prevent unauthorized access using
+                        recordings or impersonations. It distinguishes between live and pre-recorded voices, enhancing
+                        security and reliability.
+                    </div>
+                </div>
+            </div>
+            <!-- FAQ item 4 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFour">
+                    <button class="accordion-button collapsed" type="button" data-toggle="collapse"
+                        data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        How is the privacy of users' voice data ensured?
+                    </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+                    data-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Answer: User privacy is paramount. The Speaker Identification System employs stringent security
+                        measures to safeguard voice data, including encryption during storage and transmission. Access
+                        to voice profiles is strictly controlled and governed by privacy policies.
+                    </div>
+                </div>
+            </div>
+            <!-- FAQ item 5 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFive">
+                    <button class="accordion-button collapsed" type="button" data-toggle="collapse"
+                        data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                        What are the applications of the Speaker Identification System?
+                    </button>
+                </h2>
+                <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
+                    data-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Answer: The system finds applications across various sectors, including access control, online
+                        banking, customer service authentication, and law enforcement. Its versatility makes it
+                        adaptable to diverse authentication needs.
+                    </div>
+                </div>
+            </div>
+            <!-- FAQ item 6 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingSix">
+                    <button class="accordion-button collapsed" type="button" data-toggle="collapse"
+                        data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                        Can the system handle different languages and accents?
+                    </button>
+                </h2>
+                <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix"
+                    data-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Answer: Yes, the Speaker Identification System is designed to accommodate a wide range of
+                        languages, accents, and dialects. Its robust algorithms are trained on diverse datasets to
+                        ensure accuracy and effectiveness across linguistic variations.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
+</body>
+
+</html>

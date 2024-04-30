@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Training Samples</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 50px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 50px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        input[type="text"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="submit"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        #messages {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        #messages p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Record Training Samples</h1>
+        <p>Please speak into your microphone to record training samples.</p>
+        
+        <div class="form-container">
+            <form action="{{ url_for('record_train') }}" method="post">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" required>
+                <input type="submit" value="Start Recording">
+            </form>
+        </div>
+
+        <div id="messages"></div> <!-- Container for messages -->
+
+        <form id="testModelForm" action="{{ url_for('train') }}" method="post">
+            <input type="submit" value="Train Model">
+        </form>
+    </div>
+
+    <!-- SocketIO setup -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        // Function to handle incoming messages
+        socket.on('message', function (message) {
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML += '<p>' + message + '</p>';
+        });
+
+        // Function to handle the JSON response and display the message as an alert
+    function handleResponse(response) {
+        alert(response.message);
+    }
+
+    // Send a POST request to the server when the form is submitted
+    document.querySelector('form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        fetch('/record_train', {
+            method: 'POST',
+            body: new FormData(this)
+        })
+        .then(response => response.json())
+        .then(data => handleResponse(data));
+    });
+    document.getElementById('testModelForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            fetch('/train', {
+                method: 'POST',
+                body: new FormData(this)
+            })
+            .then(response => response.json())
+            .then(data => handleResponse(data));
+        });
+    </script>
+</body>
+</html>

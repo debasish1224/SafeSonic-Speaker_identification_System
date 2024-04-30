@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speaker Identification Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-top: 50px;
+        }
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        .matched {
+            border: 2px solid #4CAF50;
+        }
+        .unmatched {
+            border: 2px solid #FF5722;
+        }
+        .message {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Speaker Identification Result</h1>
+    {% for speaker in speakers %}
+    <div class="card {% if speaker != 'Not Matched' %} matched {% else %} unmatched {% endif %}">
+        <h2>{{ speaker }}</h2>
+        {% if speaker != 'Not Matched' %}
+        <div class="message">Congratulations! You are matched.</div>
+        {% else %}
+        <div class="message">Sad! No match found.</div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</body>
+</html>

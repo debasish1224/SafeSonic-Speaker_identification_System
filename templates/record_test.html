@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Test Sample</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 50px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 50px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        input[type="submit"]:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Record Test Sample</h1>
+    <p>Please speak into your microphone to record a test sample.</p>
+    <div class="container">
+        <div class="form-container">
+            <form id="recordTestForm" action="{{ url_for('record_test') }}" method="post">
+                <input type="submit" value="Start Recording">
+            </form>
+        </div>
+        <div id="messages"></div> <!-- Container for messages -->
+        <div  class="form-container">
+            <form id="testform" action="{{ url_for('test') }}" method="post">
+                <input type="submit" value="Test Model">
+            </form>
+        </div>
+    </div>
+
+    <!-- Script for handling form submission and displaying alerts -->
+    <!-- SocketIO setup -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        // Function to handle incoming messages
+        socket.on('message', function (message) {
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML += '<p>' + message + '</p>';
+        });
+        // Function to handle the JSON response and display the message as an alert
+        function handleResponse(response) {
+            alert(response.message);
+        }
+
+        // Send a POST request to the server when the form is submitted
+        document.getElementById('recordTestForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            fetch('/record_test', {
+                method: 'POST',
+                body: new FormData(this)
+            })
+            .then(response => response.json())
+            .then(data => handleResponse(data));
+        });
+    
+    </script>
+</body>
+</html>

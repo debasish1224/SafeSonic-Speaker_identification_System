@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="icon" type="image/png" href="/static/SafeSonic_Logo.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #ede8f5; /* Change background color */
+        }
+        /* Adjust search input and button */
+        .search-container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .search-container input {
+            flex: 1;
+            margin-right: 10px;
+        }
+    </style>
+
+  
+</head>
+
+<body>
+    <div class="container">
+        <h4 class="mt-5 mb-4">
+            <button type="button" title="Back" onclick="goBack()" style="border: none; background-color: transparent;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M7.354 12.354a.5.5 0 0 0 0-.708L4.707 9.5H14.5a.5.5 0 0 0 0-1H4.707l2.647-2.646a.5.5 0 0 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708 0z"/>
+                </svg>
+            </button>
+            Dashboard
+        </h4>
+
+        <!-- Search bar -->
+        <div class="search-container">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search by model name">
+            <button class="btn btn-outline-secondary" type="button" onclick="searchModels()">Search</button>
+        </div>
+
+        
+
+        <!-- Model List -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Saved Models</h5>
+                <!-- Model List Table -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>S.NO.</th>
+                            <th>Model Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="model-list">
+                        <!-- Models will be dynamically added here -->
+                        {% for model in models %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ model }}</td>
+                            <td>
+                                <!-- Buttons for managing models -->
+                                <button class="btn btn-primary btn-sm mr-2" onclick="renameModel('{{ model }}')">Rename</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteModel('{{ model }}')">Delete</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+
+function goBack() {
+            window.history.back();
+        }
+        // Function to fetch models from the server and populate the list
+        function fetchModels() {
+            fetch('/get_models')
+                .then(response => response.json())
+                .then(data => {
+                    const modelList = document.getElementById('model-list');
+                    modelList.innerHTML = ''; // Clear existing list items
+                    data.models.forEach((model, index) => {
+                        // Creating table row for each model
+                        const row = `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${model}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm mr-2" onclick="renameModel('${model}')">Rename</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteModel('${model}')">Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                        modelList.insertAdjacentHTML('beforeend', row);
+                    });
+                })
+                .catch(error => console.error('Error fetching models:', error));
+        }
+    
+        // Function to handle renaming a model
+        function renameModel(modelName) {
+            // Prompt user to enter new name
+            const newName = prompt('Enter new name for the model:', modelName);
+            if (newName !== null) {
+                // Send request to server to rename the model
+                fetch(`/rename_model?old_name=${encodeURIComponent(modelName)}&new_name=${encodeURIComponent(newName)}`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message); // Display success message
+                    fetchModels(); // Refresh the model list
+                })
+                .catch(error => console.error('Error renaming model:', error));
+            }
+        }
+    
+        // Function to handle deleting a model
+        function deleteModel(modelName) {
+            // Confirm deletion with user
+            if (confirm(`Are you sure you want to delete the model "${modelName}"?`)) {
+                // Send request to server to delete the model
+                fetch(`/delete_model?model_name=${encodeURIComponent(modelName)}`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message); // Display success message
+                    fetchModels(); // Refresh the model list
+                })
+                .catch(error => console.error('Error deleting model:', error));
+            }
+        }
+    
+        // Function to perform search
+        function searchModels() {
+            const searchInput = document.getElementById('searchInput').value.trim().toLowerCase();
+            const modelRows = document.querySelectorAll('#model-list tr');
+    
+            modelRows.forEach(row => {
+                const modelName = row.querySelector('td:nth-child(2)').textContent.trim().toLowerCase();
+                if (modelName.includes(searchInput)) {
+                    row.style.display = ''; // Show row
+                    
+                } else {
+                    row.style.display = 'none'; // Hide row
+                }
+            });
+        }
+    
+        document.addEventListener('DOMContentLoaded', function () {
+            // Call fetchModels function initially to populate the list
+            fetchModels();
+    
+            // Refresh the model list every 50 seconds
+            setInterval(fetchModels, 30000); // Adjust the interval as needed
+    
+            // Add event listener for Enter key press on search input
+            document.getElementById('searchInput').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    searchModels(); // Call search function when Enter key is pressed
+                }
+            });
+        });
+    </script>
+    
+</body>
+
+</html>

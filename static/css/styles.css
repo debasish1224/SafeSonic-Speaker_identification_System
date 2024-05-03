@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
+    background-color: #EDE8F5;
     margin: 0;
     padding: 0;
     text-align: center;
@@ -73,3 +73,100 @@ h1 {
 .modal-content {
     border-radius: 20px;
 }
+
+.navbar {
+    background-color: #7091E6 ;
+}
+
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    background-color: black; /* Change icon color to black */
+}
+
+.carousel-control-prev, .carousel-control-next {
+    filter: invert(100%); /* Invert the color of the icon */
+}
+
+    /* Custom styles for FAQ section */
+    #faq {
+        padding-top: 50px; /* Add top padding */
+        margin-bottom: 5%;
+    }
+
+    /* .accordion-item { */
+        /* margin-bottom: 20px; Add bottom margin between FAQ items */
+    /* } */
+
+    .accordion-button {
+        background-color: #EDE8F5; /* Dark background color */
+        color: #000000; /* Text color */
+        border-radius: 5px; /* Rounded corners */
+        border: none; /* Remove border */
+        margin-bottom: 5px;
+        
+    }
+
+    .accordion-button:focus {
+        box-shadow: none; /* Remove focus box shadow */
+        border: none;
+    }
+
+    .accordion-button:hover {
+        background-color: #7091E6; /* Darker background color on hover */
+        padding: 5px;
+        border: none;
+       
+    }
+
+    .accordion-body {
+        background-color: #EDE8F5; /* Light background color for answer */
+        color: #000000; /* Text color */
+        border-radius: 5px; /* Rounded corners */
+        text-align: justify;
+        /* margin-left: 10%; */
+        margin-bottom: 15px;
+    }
+
+    h5{
+        text-align:left;
+        /* margin-left: 10%; */
+        
+        
+    }
+
+    /* cardview design */
+
+    .container {
+        margin-top: 50px;
+    }
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+    .card-body {
+        padding: 40px;
+    }
+    .card-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    .btn-primary, .btn-success {
+        font-weight: bold;
+        border-radius: 25px;
+        padding: 12px 30px;
+        margin-top: 20px;
+        transition: 0.3s;
+    }
+    .btn-primary:hover, .btn-success:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    img {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }

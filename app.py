@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request
+import firebase_admin
+from firebase_admin import credentials, firestore
 from flask_socketio import SocketIO, emit
 from flask import jsonify
 import os
@@ -14,6 +16,11 @@ import pickle
 
 app = Flask(__name__)
 socketio = SocketIO(app)
+
+# Initialize Firebase Admin SDK
+cred = credentials.Certificate('credentials.json')  # Update with your Firebase credentials path
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
 @socketio.on('message')
 def handle_message(message):
@@ -231,6 +238,22 @@ def test_model():
 
     return detected_speakers
 
+def get_trained_models():
+    model_folder = MODEL_FOLDER  # Use the MODEL_FOLDER variable for the path to the trained models folder
+    trained_models = []  # Initialize a list to store trained model names
+    
+    # Check if the model folder exists
+    if os.path.exists(model_folder):
+        # Iterate through each file in the model folder
+        for file_name in os.listdir(model_folder):
+            # Check if the file is a trained model (ends with '.gmm')
+            if file_name.endswith('.gmm'):
+                # Add the trained model name to the list
+                trained_models.append(file_name)
+    
+    return trained_models
+
+
 
 @app.route('/')
 def index():
@@ -277,53 +300,90 @@ def test():
     return render_template('record_test.html')
 
 
+@app.route('/get_models')
+def getModel():
+    # Get the list of trained models
+    models = get_trained_models()
+    # Return the list of models as JSON
+    return jsonify({'models': models})
+
+@app.route('/dashboard')
+def dashboard():
+    # Get the list of trained models
+    models = get_trained_models()
+    # Render the dashboard template and pass the list of trained models to it
+    return render_template('dashboard.html', models=models)
+
+@app.route('/rename_model', methods=['POST'])
+def rename_model():
+    # Get the old and new model names from the request
+    old_name = request.args.get('old_name')
+    new_name = request.args.get('new_name')
+
+    # Ensure that the new name has the '.gmm' extension
+    if not new_name.endswith('.gmm'):
+        new_name += '.gmm'
+
+    # Generate file paths for old and new model names
+    old_model_path = os.path.join(MODEL_FOLDER, old_name)
+    new_model_path = os.path.join(MODEL_FOLDER, new_name)
+
+    try:
+        # Rename the model file
+        os.rename(old_model_path, new_model_path)
+        # Return a success message
+        return jsonify({'message': f'Model {old_name} renamed to {new_name} successfully'})
+    except FileNotFoundError:
+        # If the old model file doesn't exist, return an error message
+        return jsonify({'message': f'Model {old_name} not found'}), 404
+
+@app.route('/delete_model', methods=['POST'])
+def delete_model():
+    # Get the model name to delete from the request
+    model_name = request.args.get('model_name')
+
+    # Generate file path for the model to delete
+    model_path = os.path.join(MODEL_FOLDER, model_name)
+
+    try:
+        # Delete the model file
+        os.remove(model_path)
+        # Return a success message and the updated list of models
+        models = get_trained_models()
+        return jsonify({'message': f'Model {model_name} deleted successfully', 'models': models})
+    except FileNotFoundError:
+        # If the model file doesn't exist, return an error message
+        return jsonify({'message': f'Model {model_name} not found'}), 404
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    # Get user data from the signup form
+    first_name = request.form['signupFirstName']
+    last_name = request.form['signupLastName']
+    email = request.form['signupEmail']
+    # password = request.form['password']
+
+    # Store user data in Firestore
+    user_ref = db.collection('users').document(email)
+    user_ref.set({
+        'first_name': first_name,
+        'last_name': last_name,
+        'email': email
+    })
+
+    print("Signup successful")
+
+    # Return a response indicating successful signup
+    return jsonify({'message': 'Signup successful'})
+
+@app.route('/user_details/<email>')
+def user_details(email):
+    # Query Firestore for the user document based on the email
+    user_ref = db.collection('users').document(email)
+    user_data = user_ref.get().to_dict()
+
+    # Return the user data as JSON response
+    return jsonify(user_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-# import os
-
-# It is to ensures that both folders and files are created if they do not exist before attempting to read from or write to them.
-
-# # Function to train the Gaussian Mixture Model (GMM)
-# def train_model():
-#     # Setting path to training data and saving trained models
-#     source_folder = "D:\\SpeakerIdentificationSystem\\website\\training_set\\"
-#     model_folder = "D:\\SpeakerIdentificationSystem\\website\\trained_models\\"
-#     train_file_path = "D:\\SpeakerIdentificationSystem\\website\\training_set_addition.txt"
-
-#     # Create folders if they don't exist
-#     for folder in [source_folder, model_folder]:
-#         if not os.path.exists(folder):
-#             os.makedirs(folder)
-
-#     # Create training file if it doesn't exist
-#     if not os.path.exists(train_file_path):
-#         with open(train_file_path, 'w'):
-#             pass  # Just create the file if it doesn't exist, no need to write anything to it
-
-#     # Open training file for reading
-#     with open(train_file_path, 'r') as file_paths:
-#         count = 1  # Initializing count
-#         features = np.asarray(())  # Initializing array to store features
-#         for path in file_paths:  # Iterating through each file in the training set
-#             path = path.strip()  # Removing whitespace characters from both ends of the string
-#             print(path)
-#             sr, audio = read(os.path.join(source_folder, path))  # Reading audio file
-#             print(sr)
-#             vector = extract_features(audio, sr)  # Extracting features from audio
-#             if features.size == 0:
-#                 features = vector
-#             else:
-#                 features = np.vstack((features, vector))  # Concatenating features
-#             if count == 5:  # Training GMM after every 5 samples
-#                 gmm = GaussianMixture(n_components=6, max_iter=200, covariance_type='diag', n_init=3)  # Initializing GMM
-#                 gmm.fit(features)  # Fitting GMM to the features
-#                 picklefile = path.split("-")[0] + ".gmm"  # Generating model file name
-#                 with open(os.path.join(model_folder, picklefile), 'wb') as model_file:
-#                     pickle.dump(gmm, model_file)  # Saving trained model to file
-#                 print('+ modeling completed for speaker:', picklefile, " with data point = ", features.shape)
-#                 features = np.asarray(())  # Resetting features
-#                 count = 0  # Resetting count
-#             count += 1  # Incrementing count
-

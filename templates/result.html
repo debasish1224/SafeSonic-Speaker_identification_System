@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speaker Identification Result</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,8 +14,9 @@
             text-align: center;
         }
         h1 {
-            color: #333;
+            color: #ffffff;
             margin-top: 50px;
+            font-style:bold;
         }
         .card {
             background-color: #fff;
@@ -23,6 +25,8 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             display: inline-block;
+            position: relative;
+            width: 300px; /* Adjust width as needed */
         }
         .matched {
             border: 2px solid #4CAF50;
@@ -34,19 +38,47 @@
             font-size: 18px;
             margin-top: 10px;
         }
+        .btn-add-voice {
+            margin-top: 20px;
+            display: none; /* Initially hidden */
+        }
+        .gif {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            width: 500px; /* Set image width */
+            height: auto; /* Maintain aspect ratio */
+            pointer-events: none; /* Make GIF non-clickable */
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <h1>Speaker Identification Result</h1>
+    <h1>Safe Sonic Result</h1>
     {% for speaker in speakers %}
     <div class="card {% if speaker != 'Not Matched' %} matched {% else %} unmatched {% endif %}">
+        <img src="{% if speaker != 'Not Matched' %}static/congratulations.gif{% else %}static/sad.gif{% endif %}" alt="{% if speaker != 'Not Matched' %}Congratulations{% else %}Sadness{% endif %}" class="gif">
         <h2>{{ speaker }}</h2>
         {% if speaker != 'Not Matched' %}
-        <div class="message">Congratulations! You are matched.</div>
+        <div class="message mt-15">Congratulations! You are matched.</div>
         {% else %}
         <div class="message">Sad! No match found.</div>
+        <button class="btn btn-primary btn-add-voice" onclick="window.location.href='/record_train'">Add Voice</button>
         {% endif %}
     </div>
     {% endfor %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            const unmatchedCards = document.querySelectorAll('.unmatched');
+            unmatchedCards.forEach(card => {
+                const addVoiceButton = card.querySelector('.btn-add-voice');
+                if (addVoiceButton) {
+                    addVoiceButton.style.display = 'block'; // Show the "Add Voice" button for unmatched cards
+                }
+            });
+        });
+    </script>
 </body>
 </html>

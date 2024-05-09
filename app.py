@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import firebase_admin
 from firebase_admin import credentials, firestore
+from firebase_admin import storage
 from flask_socketio import SocketIO, emit
 from flask import jsonify
 import os
@@ -13,6 +14,8 @@ import python_speech_features as mfcc
 from sklearn import preprocessing
 from sklearn.mixture import GaussianMixture
 import pickle
+import io
+from pydub import AudioSegment
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -21,6 +24,9 @@ socketio = SocketIO(app)
 cred = credentials.Certificate('credentials.json')  # Update with your Firebase credentials path
 firebase_admin.initialize_app(cred)
 db = firestore.client()
+
+# Initialize Firebase Storage
+storage_client = storage.bucket('speaker-identification-system.appspot.com')
 
 @socketio.on('message')
 def handle_message(message):
@@ -119,6 +125,67 @@ def record_audio_test():
     waveFile.close()  # Closing WAV file
 
 
+# def record_audio_train():
+#     Name = request.form['name']  # Get the user's name from the form
+#     default_device_index = pyaudio.PyAudio().get_default_input_device_info()['index']  # Get default input device index
+#     for count in range(5):  # Recording 5 samples
+#         FORMAT = pyaudio.paInt16  # Setting audio format
+#         CHANNELS = 1  # Setting number of audio channels
+#         RATE = 44100  # Setting audio sampling rate
+#         CHUNK = 512  # Setting chunk size for audio stream
+#         RECORD_SECONDS = 10  # Setting duration of recording
+#         audio = pyaudio.PyAudio()  # Initializing PyAudio object
+
+#         socketio.emit('message', 'Recording sample {} of 5'.format(count + 1))  # Emitting a message to the client
+
+#         stream = audio.open(format=FORMAT, channels=CHANNELS,
+#                             rate=RATE, input=True, input_device_index=default_device_index,
+#                             frames_per_buffer=CHUNK)  # Opening audio stream for recording
+
+#         Recordframes = []  # Initializing list to store audio frames
+#         for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+#             data = stream.read(CHUNK)  # Reading audio data from stream
+#             Recordframes.append(data)  # Appending audio data to list
+
+#         stream.stop_stream()  # Stopping audio stream
+#         stream.close()  # Closing audio stream
+#         audio.terminate()  # Terminating PyAudio object
+
+#         OUTPUT_FILENAME = Name + "-sample" + str(count) + ".wav"  # Generating output file name
+#         WAVE_OUTPUT_FILENAME = os.path.join("training_set", OUTPUT_FILENAME)  # Generating file path
+
+#         # with open("training_set_addition.txt", 'a') as trainedfilelist:
+#         #     trainedfilelist.write(OUTPUT_FILENAME + "\n")  # Writing file name to file list
+
+#         # with wave.open(WAVE_OUTPUT_FILENAME, 'wb') as waveFile:
+#         #     waveFile.setnchannels(CHANNELS)  # Setting number of channels
+#         #     waveFile.setsampwidth(audio.get_sample_size(FORMAT))  # Setting sample width
+#         #     waveFile.setframerate(RATE)  # Setting frame rate
+#         #     waveFile.writeframes(b''.join(Recordframes))  # Writing audio frames to file
+
+#          # Upload the recorded audio file to Firebase Storage
+
+#          # this is for uploading all 5 audio to the training_set on firebase storage
+#         blob = storage_client.blob('training_set/' + OUTPUT_FILENAME)
+#         blob.upload_from_string(b''.join(Recordframes), content_type='audio/wav')
+
+#         # Write the file name to the local file list
+#         with open("training_set_addition.txt", 'a') as trainedfilelist:
+#             trainedfilelist.write(OUTPUT_FILENAME + "\n")
+
+#         # Download the file list from Firebase Storage
+#         blob_list = storage_client.blob('training_set_addition.txt')
+#         file_list = blob_list.download_as_string().decode()
+
+#         # Append the new file name to the file list
+#         file_list += OUTPUT_FILENAME + "\n"
+
+#         # Upload the updated file list back to Firebase Storage
+#         blob_list.upload_from_string(file_list)
+
+#     # Emitting a completion message
+#     socketio.emit('message', 'Recording completed for all 5 samples')
+
 def record_audio_train():
     Name = request.form['name']  # Get the user's name from the form
     default_device_index = pyaudio.PyAudio().get_default_input_device_info()['index']  # Get default input device index
@@ -159,12 +226,13 @@ def record_audio_train():
 
     socketio.emit('message', 'Recording completed for all 5 samples')  # Emitting a completion message
 
-# Function to train the Gaussian Mixture Model (GMM)
+
+# # Function to train the Gaussian Mixture Model (GMM)
 def train_model():
     source = "D:\\SpeakerIdentificationSystem\\website\\training_set\\"  # Setting path to training data
     dest = "D:\\SpeakerIdentificationSystem\\website\\trained_models\\"  # Setting path to save trained models
     train_file = "D:\\SpeakerIdentificationSystem\\website\\training_set_addition.txt"  # Setting path to training file list
-    socketio.emit('message', 'Training Started.....')
+    socketio.emit('message', 'Adding Started.....')
     file_paths = open(train_file, 'r')  # Opening training file list
     count = 1  # Initializing count
     features = np.asarray(())  # Initializing array to store features
@@ -200,7 +268,9 @@ def train_model():
         if os.path.isfile(file_path):
             os.remove(file_path)
             print("Deleted:", file_path)
-    socketio.emit('message', 'Training Completed.....')
+    socketio.emit('message', 'Added Successfully.....')
+
+
 
 def test_model():
     source = "D:\\SpeakerIdentificationSystem\\website\\testing_set\\"  # Setting path to testing data
@@ -265,7 +335,7 @@ def record_train():
     if request.method == 'POST':
         record_audio_train()
         # Instead of returning a plain string, return a JSON response with a message
-        return jsonify({'message': 'Audio recorded for training successfully'})
+        return jsonify({'message': 'Audio recorded successfully'})
     return render_template('record_train.html')
 
 
@@ -275,13 +345,36 @@ def train():
         # Check if training recordings are available
         train_file_path = "D:\\SpeakerIdentificationSystem\\website\\training_set_addition.txt"
         if not os.path.exists(train_file_path):
-            return jsonify({'message': 'No training recordings found. Please record training samples first.'}),400
+            return jsonify({'message': 'No recordings found. Please record your Voice first.'}),400
         # Check if training file is empty
         if os.path.getsize(train_file_path) == 0:
-            return jsonify({'message': 'No training recordings found in training file. Please record training samples first.'}),400
+            return jsonify({'message': 'No training recordings found. Please record your Voice first.'}),400
         train_model()
-        return jsonify({'message': 'Training Completed successfully'})
+        return jsonify({'message': 'Voice Added successfully'})
     return render_template('record_train.html')
+
+# @app.route('/train', methods=['GET','POST'])
+# def train():
+#     if request.method == 'POST':
+#         # Check if training recordings are available
+#         train_file = "training_set_addition.txt"  # Path to training file list in Firebase Storage
+#         train_file_path = train_file  # Full path to training file list
+#         blob = storage_client.blob(train_file_path)
+        
+#         if not blob.exists():
+#             return jsonify({'message': 'No training recordings found. Please record training samples first.'}), 400
+
+#         # Check if training file is empty
+#         if blob.size == 0:
+#             return jsonify({'message': 'No training recordings found in training file. Please record training samples first.'}), 400
+
+#         # Start the training process
+#         train_model()
+#         return jsonify({'message': 'Training Completed successfully'})
+
+#     return render_template('record_train.html')
+
+
 
 
 @app.route('/record_test', methods=['GET', 'POST'])

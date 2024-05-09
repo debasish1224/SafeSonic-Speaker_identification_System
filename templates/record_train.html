@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Record Training Samples</title>
+    <link rel="icon" type="image/png" href="/static/SafeSonic_Logo.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,22 +15,20 @@
             text-align: center;
         }
 
-        h1 {
-            color: #333;
-            margin-top: 50px;
-        }
-
         .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
             margin-top: 50px;
         }
 
         .form-container {
             background-color: #fff;
-            padding: 20px;
+            padding: 55px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .form-container2 {
+            background-color: #fff;
+            padding: 100px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
@@ -36,36 +36,11 @@
 
         label {
             font-weight: bold;
-            margin-bottom: 10px;
-            display: block;
         }
 
         input[type="text"],
         input[type="submit"] {
-            width: 100%;
-            padding: 10px;
             margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
-        }
-
-        input[type="text"]:focus,
-        input[type="submit"]:focus {
-            outline: none;
-            border-color: #4CAF50;
-        }
-
-        input[type="submit"] {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #45a049;
         }
 
         #messages {
@@ -73,8 +48,21 @@
             text-align: left;
         }
 
-        #messages p {
-            margin: 5px 0;
+        #messages .message-container {
+            background-color: #dff0d8;
+            border-color: #d0e9c6;
+            color: #3c763d;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        #messages .message-container p {
+            margin: 0;
+        }
+
+        .spinner-border {
+            display: none;
         }
     </style>
 </head>
@@ -83,19 +71,42 @@
         <h1>Record Training Samples</h1>
         <p>Please speak into your microphone to record training samples.</p>
         
-        <div class="form-container">
-            <form action="{{ url_for('record_train') }}" method="post">
-                <label for="name">Your Name:</label>
-                <input type="text" id="name" name="name" required>
-                <input type="submit" value="Start Recording">
-            </form>
+        <div class="row">
+            <!-- Left Box -->
+            <div class="col-md-6">
+                <div class="card form-container">
+                    <div class="card-body">
+                        <form class="needs-validation" novalidate>
+                            <div class="form-group">
+                                <label for="name">Your Name:</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                                <div class="invalid-feedback">
+                                    Please enter your name.
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="startRecordingBtn">Start Recording</button>
+                            
+                        </form>
+                        <div class="spinner-border text-primary mt-2" role="status" id="loadingSpinner">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Box -->
+            <div class="col-md-6">
+                <div class="card form-container2">
+                    <div class="card-body">
+                        <form class="needs-validation" id="testModelForm" novalidate>
+                            <button type="submit" class="btn btn-success" id="trainModelBtn" disabled>Add Voice</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div id="messages"></div> <!-- Container for messages -->
-
-        <form id="testModelForm" action="{{ url_for('train') }}" method="post">
-            <input type="submit" value="Train Model">
-        </form>
+        <div id="messages" class="mt-4"></div> <!-- Container for messages -->
     </div>
 
     <!-- SocketIO setup -->
@@ -106,32 +117,71 @@
         // Function to handle incoming messages
         socket.on('message', function (message) {
             const messagesDiv = document.getElementById('messages');
-            messagesDiv.innerHTML += '<p>' + message + '</p>';
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('message-container');
+            messageContainer.innerHTML = '<p>' + message + '</p>';
+            messagesDiv.appendChild(messageContainer);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
         });
 
         // Function to handle the JSON response and display the message as an alert
-    function handleResponse(response) {
-        alert(response.message);
-    }
+        function handleResponse(response) {
+            alert(response.message);
+        }
 
-    // Send a POST request to the server when the form is submitted
-    document.querySelector('form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the default form submission
-        fetch('/record_train', {
-            method: 'POST',
-            body: new FormData(this)
-        })
-        .then(response => response.json())
-        .then(data => handleResponse(data));
-    });
-    document.getElementById('testModelForm').addEventListener('submit', function(event) {
+        // Function to clear all message containers
+        function clearMessages() {
+            const messagesDiv = document.getElementById('messages');
+            while (messagesDiv.firstChild) {
+                messagesDiv.removeChild(messagesDiv.firstChild);
+            }
+        }
+
+        // Send a POST request to the server when the form is submitted
+        document.querySelector('form').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent the default form submission
-            fetch('/train', {
-                method: 'POST',
-                body: new FormData(this)
-            })
-            .then(response => response.json())
-            .then(data => handleResponse(data));
+            if (this.checkValidity() === false) {
+                event.stopPropagation();
+            } else {
+                const startRecordingBtn = document.getElementById('startRecordingBtn');
+                const loadingSpinner = document.getElementById('loadingSpinner');
+                const trainModelBtn = document.getElementById('trainModelBtn');
+                startRecordingBtn.setAttribute('disabled', 'true');
+                trainModelBtn.setAttribute('disabled', 'true');
+                loadingSpinner.style.display = 'inline-block';
+                clearMessages(); // Clear previous messages
+                fetch('/record_train', {
+                    method: 'POST',
+                    body: new FormData(this)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    handleResponse(data);
+                    startRecordingBtn.removeAttribute('disabled');
+                    trainModelBtn.removeAttribute('disabled');
+                    loadingSpinner.style.display = 'none';
+                });
+            }
+            this.classList.add('was-validated');
+        });
+
+        document.getElementById('testModelForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            if (this.checkValidity() === false) {
+                event.stopPropagation();
+            } else {
+                clearMessages(); // Clear previous messages
+                fetch('/train', {
+                    method: 'POST',
+                    body: new FormData(this)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    handleResponse(data);
+                    document.getElementById('name').value = ''; // Empty the name input field
+                });
+            }
+            this.classList.add('was-validated');
         });
     </script>
 </body>

@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Record Test Sample</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* Additional CSS styles */
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -13,65 +16,71 @@
             text-align: center;
         }
 
-        h1 {
-            color: #333;
-            margin-top: 50px;
-        }
-
         .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
             margin-top: 50px;
         }
-
-        .form-container {
+        .custom-card-body {
             background-color: #fff;
-            padding: 20px;
+            padding: 100px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
+        #messages {
+            margin-top: 20px;
+            text-align: left;
+        }
 
-        input[type="submit"] {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
+        #messages .message-container {
+            background-color: #dff0d8;
+            border-color: #d0e9c6;
+            color: #3c763d;
+            padding: 10px;
             border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            margin-bottom: 10px;
         }
 
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-
-        input[type="submit"]:focus {
-            outline: none;
+        #messages .message-container p {
+            margin: 0;
         }
     </style>
 </head>
 <body>
-    <h1>Record Test Sample</h1>
-    <p>Please speak into your microphone to record a test sample.</p>
     <div class="container">
-        <div class="form-container">
-            <form id="recordTestForm" action="{{ url_for('record_test') }}" method="post">
-                <input type="submit" value="Start Recording">
-            </form>
+        <h1 class="mt-5">Record Test Sample</h1>
+        <p>Please speak into your microphone to record a test sample.</p>
+        
+        <div class="row">
+            <!-- Left Box -->
+            <div class="col-md-6">
+                <div>
+                    <div class="custom-card-body">
+                        <form id="recordTestForm" action="{{ url_for('record_test') }}" method="post">
+                            <button type="submit" class="btn btn-success btn-lg btn-block">Start Recording</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Box -->
+            <div class="col-md-6">
+                <div>
+                    <div class="custom-card-body">
+                        <form id="testform" action="{{ url_for('test') }}" method="post">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Test Model</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div id="messages"></div> <!-- Container for messages -->
-        <div  class="form-container">
-            <form id="testform" action="{{ url_for('test') }}" method="post">
-                <input type="submit" value="Test Model">
-            </form>
-        </div>
+
+        <div id="messages" class="mt-4"></div> <!-- Container for messages -->
     </div>
 
-    <!-- Script for handling form submission and displaying alerts -->
-    <!-- SocketIO setup -->
+    <!-- Bootstrap JS and SocketIO setup -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script>
         const socket = io();
@@ -79,8 +88,13 @@
         // Function to handle incoming messages
         socket.on('message', function (message) {
             const messagesDiv = document.getElementById('messages');
-            messagesDiv.innerHTML += '<p>' + message + '</p>';
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('message-container');
+            messageContainer.innerHTML = '<p>' + message + '</p>';
+            messagesDiv.appendChild(messageContainer);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
         });
+
         // Function to handle the JSON response and display the message as an alert
         function handleResponse(response) {
             alert(response.message);
@@ -96,7 +110,6 @@
             .then(response => response.json())
             .then(data => handleResponse(data));
         });
-    
     </script>
 </body>
 </html>

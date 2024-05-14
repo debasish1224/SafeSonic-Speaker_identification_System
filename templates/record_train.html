@@ -183,6 +183,12 @@
             }
             this.classList.add('was-validated');
         });
+        // Reload the page if the user navigates back to it
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
     </script>
 </body>
 </html>

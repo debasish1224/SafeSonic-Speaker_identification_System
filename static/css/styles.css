@@ -74,7 +74,7 @@ h1 {
     border-radius: 20px;
 }
 
-.navbar {
+.navbar,footer {
     background-color: #7091E6;
 }
 

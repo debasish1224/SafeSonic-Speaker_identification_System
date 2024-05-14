@@ -67,7 +67,7 @@
                 <div>
                     <div class="custom-card-body">
                         <form id="testform" action="{{ url_for('test') }}" method="post">
-                            <button type="submit" class="btn btn-primary btn-lg btn-block">Test Model</button>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block" id="testModelBtn" disabled>Test Model</button>
                         </form>
                     </div>
                 </div>
@@ -103,12 +103,38 @@
         // Send a POST request to the server when the form is submitted
         document.getElementById('recordTestForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent the default form submission
+            const testModelBtn = document.getElementById('testModelBtn');
+            const startRecordingBtn = this.querySelector('button[type="submit"]');
+
+            // Disable buttons and clear previous messages
+            startRecordingBtn.setAttribute('disabled', 'true');
+            testModelBtn.setAttribute('disabled', 'true');
+            clearMessages();
             fetch('/record_test', {
                 method: 'POST',
                 body: new FormData(this)
             })
             .then(response => response.json())
-            .then(data => handleResponse(data));
+            .then(data => {
+                handleResponse(data);
+                // Enable the Test Model button after successful recording
+                testModelBtn.removeAttribute('disabled');
+                startRecordingBtn.removeAttribute('disabled');
+            });
+        });
+
+        // Function to clear all message containers
+        function clearMessages() {
+            const messagesDiv = document.getElementById('messages');
+            while (messagesDiv.firstChild) {
+                messagesDiv.removeChild(messagesDiv.firstChild);
+            }
+        }
+        // Reload the page if the user navigates back to it
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
         });
     </script>
 </body>

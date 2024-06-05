@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg fixed-top >
+    <nav class="navbar navbar-expand-lg fixed-top bg-dark >
         <div class=" container-fluid">
         <a class="navbar-brand text-white" href="#">
             <b>
@@ -22,8 +22,9 @@
 
             </b>
         </a>
-        <button class="navbar-toggler ml-auto custom-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler ml-auto custom-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -142,18 +143,18 @@
                     <form action="\signup" method="post" id="signupForm">
                         <div class="form-group">
 
-                            <input type="text" class="form-control" id="signupFirstName" name="signupFirstName" placeholder="First Name"
-                                required>
+                            <input type="text" class="form-control" id="signupFirstName" name="signupFirstName"
+                                placeholder="First Name" required>
                         </div>
                         <div class="form-group">
 
-                            <input type="text" class="form-control" id="signupLastName" name="signupLastName" placeholder="Last Name"
-                                required>
+                            <input type="text" class="form-control" id="signupLastName" name="signupLastName"
+                                placeholder="Last Name" required>
                         </div>
                         <div class="form-group">
 
-                            <input type="email" class="form-control" id="signupEmail" name="signupEmail" placeholder="Enter email"
-                                required>
+                            <input type="email" class="form-control" id="signupEmail" name="signupEmail"
+                                placeholder="Enter email" required>
                         </div>
                         <div class="form-group">
 
@@ -211,12 +212,12 @@
         <div class="card shadow">
             <div class="card-body">
                 <b>
-                    <img src="/static/SafeSonic_Logo.png" alt="Your Logo" height="30%" width="30%" />
+                    <img src="/static/SafeSonic_Logo.png" alt="SafeSonic Logo" height="30%" width="30%" />
 
                 </b>
                 <br>
                 <a id="logincheck" class="btn btn-primary" title="Click to add voice">Add Voice</a>
-                <a id="logincheck2" class="btn btn-success" title="Click to verify your voice ">Match your Voice</a>
+                <a id="logincheck2" class="btn btn-success" title="Click to verify your voice ">Verify Voice</a>
 
             </div>
         </div>
@@ -230,22 +231,23 @@
     <div id="about-us">
         <br>
         <br>
-        <div class="container mt-2 text-dark">
-            <h1 class="mb-4">About Us</h1>
+        <div class="container mt-2 text-light">
+            <h1 class="mb-4 text-light" style="font-style:bold;">About Us</h1>
 
             <p>
-                Welcome to our Speaker Identification System! At our core, we're driven by a profound fascination with
-                the
-                intricate nuances of voice technology and its limitless potential. Our dedicated team is committed to
-                pioneering advancements in speaker identification, working tirelessly to develop innovative solutions
-                that
-                redefine the landscape of voice recognition. With a steadfast focus on security, efficiency, and user
-                experience, we strive to empower individuals and organizations alike with state-of-the-art tools for
-                seamless and reliable authentication through the power of voice.
+                Welcome to SafeSonic, where innovation meets security in the realm of voice recognition technology. At
+                SafeSonic, we're dedicated to revolutionizing the way identity verification is conducted, ensuring a
+                safer and more secure future for all. Our cutting-edge platform empowers users to harness the power of
+                their voice, providing a seamless and efficient means of identity authentication. Whether it's for
+                access control, transaction verification, or fraud prevention, SafeSonic is your trusted partner in
+                safeguarding sensitive information and preventing unauthorized access. With state-of-the-art algorithms
+                and advanced machine learning techniques, we deliver unparalleled accuracy and reliability, giving you
+                peace of mind in an increasingly digital world. Join us on our mission to make the world a safer place,
+                one voice at a time. Experience the future of security with SafeSonic today.
             </p>
             <br>
             <br>
-            <h1 class="mt-2">Our Team</h1>
+            <h1 class="mt-2 text-light" style="font-style:bold;">Our Team</h1>
 
             <div id="carouselExampleIndicators" class="carousel slide" data-bs-interval="3000" data-ride="carousel">
                 <ol class="carousel-indicators">
@@ -352,16 +354,18 @@
             <br>
             <br>
 
-            <h1 class="mt-2">Our Vision</h1>
+            <h1 class="mt-2 text-light" style="font-style:bold;">Our Vision</h1>
 
-            <p>
-                At Speaker Identification System, we envision a future where voice technology seamlessly integrates into
-                various industries, providing personalized and secure experiences. Our mission is to lead the way in
-                innovation, offering state-of-the-art solutions for speaker identification and voice recognition. We
-                strive to create a world where individuals can interact with technology using their voices confidently
-                and securely. Through our dedication to research and development, we aim to unlock the full potential
-                of voice technology, revolutionizing how we interact with devices and enhancing user experiences across
-                diverse sectors.
+            <p class="text-light">
+                At SafeSonic, our vision is to redefine the landscape of identity verification through innovation and
+                technological excellence. We envision a world where access to sensitive information is safeguarded with
+                the utmost precision and efficiency, powered by the unique characteristics of each individual's voice.
+                Our goal is to pioneer the evolution of security measures, seamlessly integrating cutting-edge voice
+                recognition technology into everyday applications to enhance user experiences and protect against
+                emerging threats. By pushing the boundaries of what's possible in the realm of biometric authentication,
+                we aim to empower organizations and individuals alike with the tools they need to navigate the digital
+                landscape with confidence and peace of mind. Together, we're forging a future where security is not just
+                a measure, but a standard – where every voice is heard, recognized, and trusted.
             </p>
             <br>
             <br>
@@ -369,20 +373,20 @@
     </div>
 
     <div id="faq" class="container mt-2">
-        <h1 class="mb-4 text-dark">FAQ</h1>
+        <h1 class="mb-4 text-light" style="font-style:bold;">FAQ</h1>
         <div class="accordion" id="faqAccordion">
             <!-- FAQ item 1 -->
             <div class="accordion-item">
                 <h5 class="accordion-header" id="headingOne">
                     <button class="accordion-button" type="button" data-toggle="collapse" data-target="#collapseOne"
                         aria-expanded="true" aria-controls="collapseOne">
-                        How does the Speaker Identification System work?
+                        How does the SafeSonic work?
                     </button>
                 </h5>
                 <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
                     data-parent="#faqAccordion">
                     <div class="accordion-body">
-                        Answer: The Speaker Identification System works by capturing and analyzing unique vocal
+                        Answer: The SafeSonic works by capturing and analyzing unique vocal
                         characteristics of individuals, such as pitch, tone, and pronunciation. These characteristics
                         are
                         then compared with stored voice profiles to verify the identity of the speaker.
@@ -394,13 +398,13 @@
                 <h5 class="accordion-header" id="headingTwo">
                     <button class="accordion-button collapsed" type="button" data-toggle="collapse"
                         data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        Is the Speaker Identification System accurate?
+                        Is the SafeSonic accurate?
                     </button>
                 </h5>
                 <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                     data-parent="#faqAccordion">
                     <div class="accordion-body">
-                        Answer: Yes, the Speaker Identification System boasts high accuracy due to its advanced voice
+                        Answer: Yes, the SafeSonic boasts high accuracy due to its advanced voice
                         recognition technology. It undergoes rigorous testing to ensure reliable identification even in
                         varied environmental conditions.
                     </div>
@@ -435,7 +439,7 @@
                 <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
                     data-parent="#faqAccordion">
                     <div class="accordion-body">
-                        Answer: User privacy is paramount. The Speaker Identification System employs stringent security
+                        Answer: User privacy is paramount. The SafeSonic employs stringent security
                         measures to safeguard voice data, including encryption during storage and transmission. Access
                         to voice profiles is strictly controlled and governed by privacy policies.
                     </div>
@@ -446,7 +450,7 @@
                 <h5 class="accordion-header" id="headingFive">
                     <button class="accordion-button collapsed" type="button" data-toggle="collapse"
                         data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                        What are the applications of the Speaker Identification System?
+                        What are the applications of the SafeSonic?
                     </button>
                 </h5>
                 <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
@@ -469,7 +473,7 @@
                 <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix"
                     data-parent="#faqAccordion">
                     <div class="accordion-body">
-                        Answer: Yes, the Speaker Identification System is designed to accommodate a wide range of
+                        Answer: Yes, the SafeSonic is designed to accommodate a wide range of
                         languages, accents, and dialects. Its robust algorithms are trained on diverse datasets to
                         ensure accuracy and effectiveness across linguistic variations.
                     </div>
@@ -477,47 +481,47 @@
             </div>
         </div>
     </div>
-    
+
 
     <!-- Your existing HTML content here -->
 
     <!-- FOOTER -->
     <footer class="w-100 flex-shrink-0 bg-dark text-white">
-        <div class="container py-2">
-            <div class="row gy-4 gx-5">
+        <div class="container py-5">
+            <div class="row gy-4 gx-lg-5">
                 <div class="col-lg-4 col-md-6">
-                    <h5 class="h1 text-primary">SafeSonic</h5>
-                    <h5 class="text-white">Speak Record Verify</h5>
-                    <h6 class="text-muted">&copy; 2024 Copyrights. All rights reserved. 
-                        <a class="text-primary" href="#">SafeSonic.com</a>
-                    </h6>
+                    <h5 class="text-primary mb-4" style="margin-left: 120px;">SafeSonic</h5>
+                    <p class="text-light">Speak Record Verify</p>
+                    <p class="text-light">&copy; 2024 SafeSonic. All rights reserved.</p>
+                    <p><a class="text-primary" href="#">Visit SafeSonic.com</a></p>
                 </div>
                 <div class="col-lg-2 col-md-6">
-                    <h5 class="text-primary mb-3">Quick links</h5>
-                    <ul class="list-unstyled text-light">
+                    <h5 class="text-primary mb-4" style="margin-left: 27px;">Quick Links</h5>
+                    <ul class="list-unstyled">
                         <li><a href="#" class="text-light">Home</a></li>
                         <li><a href="#about-us" class="text-light">About Us</a></li>
                         <li><a href="#faq" class="text-light">FAQ</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-2 col-md-6">
-                    <h5 class="text-primary mb-3">Follow Us</h5>
+                    <h5 class="text-primary mb-4" style="margin-left: 10px;">Follow Us</h5>
                     <div class="d-flex">
-                        <a href="#" class="text-light me-2 mr-2"><i class="fab fa-facebook fa-lg"></i></a>
-                        <a href="#" class="text-light me-2 mr-2"><i class="fab fa-twitter fa-lg"></i></a>
-                        <a href="#" class="text-light me-2 mr-2"><i class="fab fa-instagram fa-lg"></i></a>
-                        <a href="#" class="text-light me-2 mr-2"><i class="fab fa-linkedin fa-lg"></i></a>
+                        <a href="#" class="text-light me-2 p-1"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-light me-2 p-1"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-light me-2 p-1"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-light me-2 p-1"><i class="fab fa-linkedin fa-lg"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
-                    <h5 class="text-primary mb-3">Contact Us</h5>
-                    <p><a href="https://www.google.com/maps/dir/24.2871479,87.2568078/dumka+engineering+college+maps/@24.284825,87.2510662,15z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x39f0b7754e7ad5cf:0xf51debab4712fcfe!2m2!1d87.2635578!2d24.284384?entry=ttu" class="fas fa-map-marker-alt me-2"></a> Dumka Engineering College, Dumka</p>
-                    <p><a href="mailto:vishwakarmaanjan@gmail.com" class="fas fa-envelope me-2"></a> info@safesonic.com</p>
-                    <p><a href="tel:+916287714671" class="fas fa-phone me-2"></a> +91 6287714671</p>
+                    <h5 class="text-primary mb-4" style="margin-left: 120px;">Contact Us</h5>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> Dumka Engineering College, Dumka</p>
+                    <p><i class="fas fa-envelope me-2"></i> info@safesonic.com</p>
+                    <p><i class="fas fa-phone me-2"></i> +91 6287714671</p>
                 </div>
             </div>
         </div>
     </footer>
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

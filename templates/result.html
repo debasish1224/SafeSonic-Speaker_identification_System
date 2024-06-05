@@ -1,84 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speaker Identification Result</title>
+    <title>Safe Sonic Result</title>
+    <link rel="icon" type="image/png" href="/static/SafeSonic_Logo.png">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #2d114c, #0b1b36);
+            color: #fff;
             margin: 0;
             padding: 0;
             text-align: center;
         }
-        h1 {
-            color: #ffffff;
+
+        .container {
             margin-top: 50px;
-            font-style:bold;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
+
         .card {
             background-color: #fff;
             padding: 20px;
             margin: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: inline-block;
-            position: relative;
-            width: 300px; /* Adjust width as needed */
+            width: 300px;
+            /* Adjust width as needed */
+            transition: transform 0.3s ease;
         }
+
         .matched {
-            border: 2px solid #4CAF50;
+            border: 2px solid #28a745;
+            /* Green border for matched */
         }
+
         .unmatched {
-            border: 2px solid #FF5722;
+            border: 2px solid #dc3545;
+            /* Red border for unmatched */
         }
+
         .message {
             font-size: 18px;
             margin-top: 10px;
         }
+
         .btn-add-voice {
             margin-top: 20px;
-            display: none; /* Initially hidden */
         }
-        .gif {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-            width: 500px; /* Set image width */
-            height: auto; /* Maintain aspect ratio */
-            pointer-events: none; /* Make GIF non-clickable */
-            margin-top: 20px;
+
+        .result-image {
+            width: 100%;
+            max-width: 200px;
+            display: block;
+            margin: 0 auto 20px;
+            /* Center the image */
+        }
+
+        .result-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .text-success {
+            color: #28a745;
+        }
+
+        .text-danger {
+            color: #dc3545;
         }
     </style>
 </head>
+
 <body>
-    <h1>Safe Sonic Result</h1>
-    {% for speaker in speakers %}
-    <div class="card {% if speaker != 'Not Matched' %} matched {% else %} unmatched {% endif %}">
-        <img src="{% if speaker != 'Not Matched' %}static/congratulations.gif{% else %}static/sad.gif{% endif %}" alt="{% if speaker != 'Not Matched' %}Congratulations{% else %}Sadness{% endif %}" class="gif">
-        <h2>{{ speaker }}</h2>
-        {% if speaker != 'Not Matched' %}
-        <div class="message mt-15">Congratulations! You are matched.</div>
-        {% else %}
-        <div class="message">Sad! No match found.</div>
-        <button class="btn btn-primary btn-add-voice" onclick="window.location.href='/record_train'">Add Voice</button>
-        {% endif %}
+    <div class="container">
+        {% for speaker in speakers %}
+        <div class="card {% if speaker != 'Not Matched' %} matched {% else %} unmatched {% endif %}" style="padding: 81px;
+        margin: 51px;
+        width: 500px;">
+            <img src="{% if speaker != 'Not Matched' %}static/congratulations.gif{% else %}static/sad.gif{% endif %}"
+                alt="{% if speaker != 'Not Matched' %}Congratulations{% else %}Sadness{% endif %}" class="result-image">
+            <div class="result-text {% if speaker != 'Not Matched' %} text-success {% else %} text-danger {% endif %}">
+                {{ speaker }}
+            </div>
+            {% if speaker != 'Not Matched' %}
+            <div class="message text-success mt-3">Congratulations! Voice are Present.</div>
+            {% else %}
+            <div class="message text-danger mt-3">Sad! No Voice found.</div>
+            <button class="btn btn-primary btn-add-voice" onclick="window.location.href='/record_train'">Add
+                Voice</button>
+            {% endif %}
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-    <script>
-        document.addEventListener("DOMContentLoaded", function(event) {
-            const unmatchedCards = document.querySelectorAll('.unmatched');
-            unmatchedCards.forEach(card => {
-                const addVoiceButton = card.querySelector('.btn-add-voice');
-                if (addVoiceButton) {
-                    addVoiceButton.style.display = 'block'; // Show the "Add Voice" button for unmatched cards
-                }
-            });
-        });
-    </script>
 </body>
+
 </html>

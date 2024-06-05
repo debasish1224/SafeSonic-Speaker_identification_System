@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Record Test Sample</title>
+    <title>Your Voice, Our Knowledge: Record Today</title>
+    <link rel="icon" type="image/png" href="/static/SafeSonic_Logo.png">
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* Additional CSS styles */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background: linear-gradient(to right, #2d114c, #0b1b36);
+            color: #fff;
             margin: 0;
             padding: 0;
             text-align: center;
@@ -19,13 +21,15 @@
         .container {
             margin-top: 50px;
         }
+
         .custom-card-body {
-            background-color: #fff;
-            padding: 100px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 60px;
+            border-radius: 15px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
+
         #messages {
             margin-top: 20px;
             text-align: left;
@@ -35,7 +39,7 @@
             background-color: #dff0d8;
             border-color: #d0e9c6;
             color: #3c763d;
-            padding: 10px;
+            padding: 15px;
             border-radius: 5px;
             margin-bottom: 10px;
         }
@@ -43,12 +47,18 @@
         #messages .message-container p {
             margin: 0;
         }
+
+        .btn-primary, .btn-success {
+            width: 100%;
+            padding: 15px;
+            border-radius: 25px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-5">Record Test Sample</h1>
-        <p>Please speak into your microphone to record a test sample.</p>
+        <h1>Record Your Voice for Analysis</h1>
+        <p>Capture your voice for detailed analysis by speaking into the microphone..</p>
         
         <div class="row">
             <!-- Left Box -->
@@ -58,6 +68,9 @@
                         <form id="recordTestForm" action="{{ url_for('record_test') }}" method="post">
                             <button type="submit" class="btn btn-success btn-lg btn-block">Start Recording</button>
                         </form>
+                        <div class="spinner-border text-primary mt-2" role="status" id="loadingSpinner">
+                            <span class="sr-only">Loading...</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -67,7 +80,7 @@
                 <div>
                     <div class="custom-card-body">
                         <form id="testform" action="{{ url_for('test') }}" method="post">
-                            <button type="submit" class="btn btn-primary btn-lg btn-block" id="testModelBtn" disabled>Test Model</button>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block" id="testModelBtn" disabled>Verify Voice</button>
                         </form>
                     </div>
                 </div>
@@ -100,15 +113,19 @@
             alert(response.message);
         }
 
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        loadingSpinner.style.display='none';
         // Send a POST request to the server when the form is submitted
         document.getElementById('recordTestForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent the default form submission
             const testModelBtn = document.getElementById('testModelBtn');
             const startRecordingBtn = this.querySelector('button[type="submit"]');
+            
 
             // Disable buttons and clear previous messages
             startRecordingBtn.setAttribute('disabled', 'true');
             testModelBtn.setAttribute('disabled', 'true');
+            loadingSpinner.style.display = 'inline-block';
             clearMessages();
             fetch('/record_test', {
                 method: 'POST',
@@ -120,6 +137,7 @@
                 // Enable the Test Model button after successful recording
                 testModelBtn.removeAttribute('disabled');
                 startRecordingBtn.removeAttribute('disabled');
+                loadingSpinner.style.display = 'none';
             });
         });
 

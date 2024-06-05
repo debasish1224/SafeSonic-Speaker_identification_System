@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Record Training Samples</title>
+    <title>Your Voice, Our Knowledge: Record Today</title>
     <link rel="icon" type="image/png" href="/static/SafeSonic_Logo.png">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #2d114c, #0b1b36);
+            color: #fff;
             margin: 0;
             padding: 0;
             text-align: center;
@@ -20,31 +21,36 @@
         }
 
         .form-container {
-            background-color: #fff;
-            padding: 55px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
+
         .form-container2 {
-            background-color: #fff;
-            padding: 100px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 60px;
+            border-radius: 15px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
 
         label {
             font-weight: bold;
+            color: #333;
         }
 
-        input[type="text"],
-        input[type="submit"] {
+        input[type="text"] {
             margin-bottom: 20px;
         }
 
-        #messages {
+        button[type="submit"] {
             margin-top: 20px;
+        }
+
+        #messages {
+            margin-top: 30px;
             text-align: left;
         }
 
@@ -52,7 +58,7 @@
             background-color: #dff0d8;
             border-color: #d0e9c6;
             color: #3c763d;
-            padding: 10px;
+            padding: 15px;
             border-radius: 5px;
             margin-bottom: 10px;
         }
@@ -64,12 +70,18 @@
         .spinner-border {
             display: none;
         }
+
+        .btn-primary, .btn-success {
+            width: 100%;
+            padding: 15px;
+            border-radius: 25px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Record Training Samples</h1>
-        <p>Please speak into your microphone to record training samples.</p>
+        <h1>Your Voice, Our Knowledge: Record Today</h1>
+        <p>Speak into the microphone to secure your voice identity.</p>
         
         <div class="row">
             <!-- Left Box -->
@@ -85,7 +97,6 @@
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary" id="startRecordingBtn">Start Recording</button>
-                            
                         </form>
                         <div class="spinner-border text-primary mt-2" role="status" id="loadingSpinner">
                             <span class="sr-only">Loading...</span>
@@ -96,7 +107,7 @@
             
             <!-- Right Box -->
             <div class="col-md-6">
-                <div class="card form-container2">
+                <div class="card form-container2" style="padding: 85px;">
                     <div class="card-body">
                         <form class="needs-validation" id="testModelForm" novalidate>
                             <button type="submit" class="btn btn-success" id="trainModelBtn" disabled>Add Voice</button>

@@ -97,13 +97,13 @@ def record_audio_test():
                         rate=RATE, input=True, input_device_index=index,
                         frames_per_buffer=CHUNK)  # Opening audio stream for recording
     print("Recording started")
-    socketio.emit('message', 'Test Recording Started....')  # Emitting a completion message
+    socketio.emit('message', 'Voice Recording Started For Verification....')  # Emitting a completion message
     Recordframes = []  # Initializing list to store audio frames
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         data = stream.read(CHUNK)  # Reading audio data from stream
         Recordframes.append(data)  # Appending audio data to list
     print("Recording stopped")
-    socketio.emit('message', 'Test Recording completed.')  # Emitting a completion message
+    socketio.emit('message', 'Voice Recording completed.')  # Emitting a completion message
     stream.stop_stream()  # Stopping audio stream
     stream.close()  # Closing audio stream
     audio.terminate()  # Terminating PyAudio object
@@ -232,7 +232,7 @@ def train_model():
     source = "D:\\SpeakerIdentificationSystem\\website\\training_set\\"  # Setting path to training data
     dest = "D:\\SpeakerIdentificationSystem\\website\\trained_models\\"  # Setting path to save trained models
     train_file = "D:\\SpeakerIdentificationSystem\\website\\training_set_addition.txt"  # Setting path to training file list
-    socketio.emit('message', 'Adding Started.....')
+    socketio.emit('message', 'Voice Addition Started into the Database....')
     file_paths = open(train_file, 'r')  # Opening training file list
     count = 1  # Initializing count
     features = np.asarray(())  # Initializing array to store features
@@ -268,7 +268,7 @@ def train_model():
         if os.path.isfile(file_path):
             os.remove(file_path)
             print("Deleted:", file_path)
-    socketio.emit('message', 'Added Successfully.....')
+    socketio.emit('message', 'Voice Added Successfully into the Database.')
 
 
 
@@ -335,7 +335,7 @@ def record_train():
     if request.method == 'POST':
         record_audio_train()
         # Instead of returning a plain string, return a JSON response with a message
-        return jsonify({'message': 'Audio recorded successfully'})
+        return jsonify({'message': 'Voice recorded successfully'})
     return render_template('record_train.html')
 
 
@@ -348,7 +348,7 @@ def train():
             return jsonify({'message': 'No recordings found. Please record your Voice first.'}),400
         # Check if training file is empty
         if os.path.getsize(train_file_path) == 0:
-            return jsonify({'message': 'No training recordings found. Please record your Voice first.'}),400
+            return jsonify({'message': 'No Voice recordings found. Please record your Voice first.'}),400
         train_model()
         return jsonify({'message': 'Voice Added successfully'})
     return render_template('record_train.html')
@@ -381,7 +381,7 @@ def train():
 def record_test():
     if request.method == 'POST':
         record_audio_test()
-        return jsonify({'message': 'Audio recorded for testing successfully'})
+        return jsonify({'message': 'Voice recorded for verification successfully'})
     return render_template('record_test.html')
 
 
@@ -425,10 +425,10 @@ def rename_model():
         # Rename the model file
         os.rename(old_model_path, new_model_path)
         # Return a success message
-        return jsonify({'message': f'Model {old_name} renamed to {new_name} successfully'})
+        return jsonify({'message': f'Voice Identity {old_name} renamed to {new_name} successfully'})
     except FileNotFoundError:
         # If the old model file doesn't exist, return an error message
-        return jsonify({'message': f'Model {old_name} not found'}), 404
+        return jsonify({'message': f'Voice Identity {old_name} not found'}), 404
 
 @app.route('/delete_model', methods=['POST'])
 def delete_model():
@@ -443,10 +443,10 @@ def delete_model():
         os.remove(model_path)
         # Return a success message and the updated list of models
         models = get_trained_models()
-        return jsonify({'message': f'Model {model_name} deleted successfully', 'models': models})
+        return jsonify({'message': f'Voice Identity {model_name} deleted successfully', 'models': models})
     except FileNotFoundError:
         # If the model file doesn't exist, return an error message
-        return jsonify({'message': f'Model {model_name} not found'}), 404
+        return jsonify({'message': f'Voice Identity {model_name} not found'}), 404
 
 @app.route('/signup', methods=['POST'])
 def signup():

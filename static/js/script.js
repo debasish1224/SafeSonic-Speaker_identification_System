@@ -445,7 +445,7 @@ function recordVoiceClicked() {
         // console.log("User logged in, navigating to record train page");
     } else {
         // User is not logged in, display an alert and open the login modal
-        alert("Please log in to access this feature.");
+        // alert("Please log in to access this feature.");
         $('#loginModal').modal('show'); // Open the login modal
     }
 }
@@ -457,7 +457,7 @@ function recordVoiceClicked2() {
         // console.log("User logged in, navigating to record train page");
     } else {
         // User is not logged in, display an alert and open the login modal
-        alert("Please log in to access this feature.");
+        // alert("Please log in to access this feature.");
         $('#loginModal').modal('show'); // Open the login modal
     }
 }

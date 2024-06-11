@@ -273,14 +273,13 @@ function signupUser() {
 async function sendVerificationEmail(user) {
     try {
         // Define action code settings
-        const actionCodeSettings = {
-            url: 'https://speakeridentificationsystem.netlify.app/', // Your website URL
-            handleCodeInApp: true,
-            // Additional platform-specific settings can be added here if needed
-        };
-
+        // const actionCodeSettings = {
+        //     url: 'https://speakeridentificationsystem.netlify.app/', // Your website URL
+        //     handleCodeInApp: true,
+        //     // Additional platform-specific settings can be added here if needed
+        // };
         // Send email verification using action code settings
-        await sendEmailVerification(user, actionCodeSettings);
+        await sendEmailVerification(user);
 
         // Email verification sent successfully
         alert('Email verification sent! Check your mailbox.');

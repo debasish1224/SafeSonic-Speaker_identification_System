@@ -86,7 +86,7 @@
                 </div>
             </div>
         </div>
-
+        <div id="timer" class="mt-4"></div> <!-- Timer display -->
         <div id="messages" class="mt-4"></div> <!-- Container for messages -->
     </div>
 
@@ -127,6 +127,8 @@
             testModelBtn.setAttribute('disabled', 'true');
             loadingSpinner.style.display = 'inline-block';
             clearMessages();
+            // Start the 10-second timer
+            startTimer(10, startRecordingBtn, testModelBtn);
             fetch('/record_test', {
                 method: 'POST',
                 body: new FormData(this)
@@ -140,6 +142,7 @@
                 loadingSpinner.style.display = 'none';
             });
         });
+        
 
         // Function to clear all message containers
         function clearMessages() {
@@ -148,6 +151,25 @@
                 messagesDiv.removeChild(messagesDiv.firstChild);
             }
         }
+        // Function to start the timer
+        function startTimer(duration, startRecordingBtn, testModelBtn) {
+            const timerDiv = document.getElementById('timer');
+            let timeLeft = duration;
+            timerDiv.textContent = `Recording finishes in ${timeLeft} seconds`;
+
+            const timer = setInterval(() => {
+                timeLeft -= 1;
+                timerDiv.textContent = `Recording finishes in ${timeLeft} seconds`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    timerDiv.textContent = '';
+                    startRecordingBtn.removeAttribute('disabled');
+                    testModelBtn.removeAttribute('disabled');
+                }
+            }, 1000);
+        }
+
         // Reload the page if the user navigates back to it
         window.addEventListener('pageshow', function(event) {
             if (event.persisted) {

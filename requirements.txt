@@ -1,0 +1,9 @@
+Flask==2.1.1
+Flask-SocketIO==5.1.1
+numpy==1.22.3
+scipy==1.8.0
+scikit-learn==1.0.2
+pyaudio==0.2.11
+python_speech_features==0.6
+pydub==0.25.1
+firebase-admin==5.2.0

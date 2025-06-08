@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Safe Sonic
 
 This repository contains the code for a Flask-based web application that performs speaker identification using Gaussian Mixture Models (GMM) and Firebase for storage and authentication.
@@ -105,6 +104,4 @@ This project is licensed under the MIT License. See the LICENSE file for details
 - Store your audio recorded for training in the `training_set` folder and testing audio in the `testing_set` folder.
 - Use `training_set_addition.txt` to append trained files and `testing_set_addition.txt` for appending test files.
 =======
-# Safe_Sonic
-Speaker Identification system using machine learning
->>>>>>> dc53531e9ec6d71d62457fccd413b1b1a9363027
+
